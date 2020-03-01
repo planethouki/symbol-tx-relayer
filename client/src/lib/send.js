@@ -17,6 +17,13 @@ const networkType = NetworkType.TEST_NET;
 const serverUrl = 'http://localhost:8765';
 const nodeUrl = 'https://test-api.48gh23s.xyz:3001';
 
+/**
+ *
+ * @param {String} privateKey
+ * @param {String} metadataKey
+ * @param {String} metadataValue
+ * @return {Promise<{announceResponse: *, transactionHash: {String}}>}
+ */
 export default (privateKey, metadataKey, metadataValue) => {
     const signSchema = SHA3Hasher.resolveSignSchema(networkType);
     const account = Account.createFromPrivateKey(privateKey, networkType);
