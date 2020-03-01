@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "nem2-sdk": "^0.16.5",
+    "rxjs": "^6.5.4",
     "svelte-spa-router": "^2.0.0",
     "sveltestrap": "^3.3.2"
   },

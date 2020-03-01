@@ -6,39 +6,71 @@ import {
     NetworkType,
     KeyGenerator,
     KeyPair,
+    RepositoryFactoryHttp,
     SHA3Hasher,
 } from "nem2-sdk";
 
+import { of } from 'rxjs';
+import { catchError, mergeMap } from "rxjs/operators";
+
 const networkType = NetworkType.TEST_NET;
+const serverUrl = 'http://localhost:8765';
+const nodeUrl = 'https://test-api.48gh23s.xyz:3001';
 
 export default (privateKey, metadataKey, metadataValue) => {
     const signSchema = SHA3Hasher.resolveSignSchema(networkType);
     const account = Account.createFromPrivateKey(privateKey, networkType);
-    const targetPublicKey = account.publicKey;
+    const metadataValueBytes = Convert.utf8ToUint8(metadataValue);
+
+    const repositoryFactory = new RepositoryFactoryHttp(nodeUrl);
+    const metadataHttp = repositoryFactory.createMetadataRepository();
 
     let transactionHash;
     let announceResponse;
 
-    const accountMetadataTransaction = AccountMetadataTransaction.create(
-        Deadline.create(),
-        targetPublicKey,
-        KeyGenerator.generateUInt64Key(metadataKey),
-        metadataValue.length,
-        metadataValue,
-        networkType
-    );
-
-    return fetch('http://localhost:8765/claim', {
-        method: 'POST',
-        cache: 'no-cache',
-        headers: {
-            "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-            publicKey: targetPublicKey,
-            transaction: accountMetadataTransaction.toJSON()
+    return metadataHttp
+        .getAccountMetadataByKeyAndSender(
+            account.address,
+            KeyGenerator.generateUInt64Key(metadataKey).toHex(),
+            account.publicKey)
+        .pipe(
+            mergeMap((metadata) => {
+                const currentValueBytes = Convert.utf8ToUint8(metadata.metadataEntry.value);
+                console.log(currentValueBytes);
+                return of(AccountMetadataTransaction.create(
+                    Deadline.create(),
+                    account.publicKey,
+                    KeyGenerator.generateUInt64Key(metadataKey),
+                    metadataValueBytes.length - currentValueBytes.length,
+                    Convert.decodeHex(Convert.xor(currentValueBytes, metadataValueBytes)),
+                    networkType,
+                ));
+            }),
+            catchError((err) => {
+                return of(AccountMetadataTransaction.create(
+                    Deadline.create(),
+                    account.publicKey,
+                    KeyGenerator.generateUInt64Key(metadataKey),
+                    metadataValue.length,
+                    metadataValue,
+                    networkType
+                ))
+            })
+        )
+        .toPromise()
+        .then((accountMetadataTransaction) => {
+            return fetch(`${serverUrl}/claim`, {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: {
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: JSON.stringify({
+                    publicKey: account.publicKey,
+                    transaction: accountMetadataTransaction.toJSON()
+                })
+            })
         })
-    })
         .then(res => res.json())
         .then(({hash}) => {
             transactionHash = hash;
@@ -51,7 +83,7 @@ export default (privateKey, metadataKey, metadataValue) => {
             }
         })
         .then((body) => {
-            return fetch('http://localhost:8765/sign', {
+            return fetch(`${serverUrl}/sign`, {
                 method: 'POST',
                 cache: 'no-cache',
                 headers: {

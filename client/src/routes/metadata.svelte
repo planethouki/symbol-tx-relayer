@@ -1,10 +1,10 @@
 <script>
     import { Button, Form, FormGroup, FormText, Input, Label } from 'sveltestrap';
     import send from '../lib/send';
+    import { privateKey } from '../stores.js';
 
     export const name = 'metadata';
 
-    let privateKey = "E4E48DAF7CC2F7E99818490D4F3DB9D14D7D58078D59FC99DB6B944A098BF9BC";
     let metadataKey = "";
     let metadataValue = "";
 
@@ -13,7 +13,8 @@
     let hashes = [], announces = [];
 
     function handleClick(event) {
-        sending = send(privateKey, metadataKey, metadataValue)
+        event.preventDefault();
+        sending = send($privateKey, metadataKey, metadataValue)
             .then(({transactionHash, announceResponse}) => {
                 hashes = [...hashes, transactionHash];
                 announces = [...announces, announceResponse];
@@ -26,7 +27,7 @@
 </svelte:head>
 
 <h1>メタデータを作成する</h1>
-<p>あなたのアカウントにメタデータを作成します。</p>
+<p>あなたのアカウントにメタデータを作成します。手数料はかかりません。</p>
 
 <Form>
     <FormGroup>
@@ -35,7 +36,7 @@
                 type="text"
                 name="privateKey"
                 id="inputPrivateKey"
-                bind:value={privateKey}
+                bind:value={$privateKey}
                 placeholder="Test Private Key" />
     </FormGroup>
     <FormGroup>
