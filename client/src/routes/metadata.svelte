@@ -3,6 +3,7 @@
     import send from '../lib/send';
     import get from '../lib/get';
     import { privateKey } from '../stores.js';
+    import { Account, Convert, KeyGenerator, NetworkType } from 'nem2-sdk';
 
     export const name = 'metadata';
 
@@ -15,6 +16,27 @@
     let getting = Promise.resolve();
 
     let hashes = [], announces = [], metadata = [];
+
+    let address = '', metadataKeyId = '', metadataValueHex = '';
+
+    $: {
+        try {
+            const account = Account.createFromPrivateKey($privateKey, NetworkType.TEST_NET);
+            address = account.address.pretty();
+        } catch (e) {
+            address = "";
+        }
+    }
+
+    $: {
+        try {
+            metadataKeyId = KeyGenerator.generateUInt64Key(metadataKey).toHex()
+        } catch (e) {
+            metadataKeyId = ''
+        }
+    }
+
+    $: metadataValueHex = Convert.utf8ToHex(metadataValue);
 
     function handleSend(event) {
         event.preventDefault();
@@ -90,6 +112,7 @@
                 id="inputPrivateKey"
                 bind:value={$privateKey}
                 placeholder="Test Private Key" />
+        <div class="text-right">Address: {address}</div>
     </FormGroup>
     <FormGroup>
         <Label for="inputMetadataKey">Metadata Key</Label>
@@ -99,6 +122,7 @@
                 id="inputMetadataKey"
                 bind:value={metadataKey}
                 placeholder="Metadata Key" />
+        <div class="text-right">Generated Key: {metadataKeyId}</div>
     </FormGroup>
     <FormGroup>
         <Label for="inputMetadataValue">Metadata Value</Label>
@@ -108,6 +132,7 @@
                 id="inputMetadataValue"
                 bind:value={metadataValue}
                 placeholder="Metadata Value" />
+        <div class="text-right">Hex Value: {metadataValueHex}</div>
     </FormGroup>
     <FormGroup>
         {#await sending}
