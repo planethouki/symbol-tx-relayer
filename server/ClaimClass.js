@@ -7,13 +7,10 @@ const {
     NetworkType,
     PlainMessage,
     PublicAccount,
-    SignedTransaction,
-    Transaction,
     TransactionMapping,
     TransferTransaction,
     UInt64
 } = require('nem2-sdk');
-const async = require('async');
 
 module.exports = class Claim {
 
