@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node-dev index.js",
-    "test": "jest"
+    "test": "jest",
+    "hoge": "jest test/DataClass.test.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
   "homepage": "https://github.com/planethouki/symbol-tx-relayer#readme",
   "dependencies": {
     "async": "^3.2.0",
+    "aws-sdk": "^2.635.0",
     "dotenv": "^8.2.0",
     "nem2-sdk": "^0.16.5",
     "restify": "^8.5.1",
