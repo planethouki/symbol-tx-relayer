@@ -20,7 +20,8 @@ server.use(cors.actual);
 
 async.waterfall([
     (callback) => {
-        data = new Data(':memory:', callback);
+        data = new Data(':memory:');
+        data.initialize(callback);
     },
     (callback) => {
         server.post('/claim', claimRoute(data));

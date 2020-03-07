@@ -10,10 +10,16 @@ module.exports = class Data {
     /**
      *
      * @param {String} name database name
-     * @param {Function} callback callback(err, result)
      */
-    constructor(name, callback) {
+    constructor(name) {
         this.name = name;
+    }
+
+    /**
+     *
+     * @param {Function} callback callback(err)
+     */
+    initialize(callback) {
         async.waterfall([
             (cb) => {
                 this.db = new sqlite3.Database(this.name, cb);

@@ -73,7 +73,8 @@ test('instance', (done) => {
     let data;
     async.waterfall([
         (callback) => {
-            data = new Data(`test/db/test-${Date.now()}`, callback);
+            data = new Data(`test/db/test-${Date.now()}`);
+            data.initialize(callback);
         },
         (callback) => {
             expect(data).toBeInstanceOf(Data);
@@ -89,7 +90,8 @@ test('save & load', (done) => {
     let data;
     async.waterfall([
         (callback) => {
-            data = new Data(`test/db/test-${Date.now()}`, callback);
+            data = new Data(`test/db/test-${Date.now()}`);
+            data.initialize(callback);
         },
         (callback) => {
             data.save(signedTransaction, callback)
@@ -117,7 +119,8 @@ test('load', (done) => {
     let data;
     async.waterfall([
         (callback) => {
-            data = new Data(`test/db/test-${Date.now()}`, callback);
+            data = new Data(`test/db/test-${Date.now()}`);
+            data.initialize(callback);
         },
         async.reflect((callback) => {
             data.save(signedTransaction, callback)
@@ -137,7 +140,8 @@ test('save', (done) => {
     let data;
     async.waterfall([
         (callback) => {
-            data = new Data(`test/db/test-${Date.now()}`, callback);
+            data = new Data(`test/db/test-${Date.now()}`);
+            data.initialize(callback);
         },
         async.reflect((callback) => {
             data.load(hash, callback);
