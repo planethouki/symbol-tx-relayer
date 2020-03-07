@@ -1,5 +1,5 @@
 const async = require('async');
-const Claim = require('./ClaimClass');
+const Claim = require('../ClaimClass');
 
 module.exports = (data) => (req, res, next) => {
     try {

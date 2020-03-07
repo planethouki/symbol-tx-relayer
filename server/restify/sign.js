@@ -1,5 +1,5 @@
 const async = require('async');
-const Sign = require('./SignClass');
+const Sign = require('../SignClass');
 
 module.exports = (data) => (req, res, next) => {
     try {
