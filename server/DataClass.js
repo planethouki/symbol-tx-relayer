@@ -33,7 +33,7 @@ module.exports = class Data {
     /**
      *
      * @param {SignedTransaction} signedTransaction
-     * @param {Function} callback callback(err, result)
+     * @param {Function} callback callback(err)
      */
     save(signedTransaction, callback) {
         this.db.run(
