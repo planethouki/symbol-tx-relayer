@@ -3,8 +3,8 @@ const restify = require('restify');
 const async = require('async');
 const corsMiddleware = require('restify-cors-middleware');
 
-const claimRoute = require('./claim');
-const signRoute = require('./sign');
+const claimRoute = require('./restify/claim');
+const signRoute = require('./restify/sign');
 
 const Data = require('./DataClass');
 let data;
