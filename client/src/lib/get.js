@@ -7,8 +7,10 @@ import {
 import { of } from 'rxjs';
 import { catchError } from "rxjs/operators";
 
+const config = require('../../config.json');
+
 const networkType = NetworkType.TEST_NET;
-const nodeUrl = 'https://test-api.48gh23s.xyz:3001';
+const nodeUrl = config.nodeUrl;
 
 /**
  *

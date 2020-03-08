@@ -13,9 +13,11 @@ import {
 import { of } from 'rxjs';
 import { catchError, mergeMap } from "rxjs/operators";
 
+const config = require('../../config.json');
+
 const networkType = NetworkType.TEST_NET;
-const serverUrl = 'https://5kxe60w7r6.execute-api.ap-northeast-1.amazonaws.com/relayer';
-const nodeUrl = 'https://test-api.48gh23s.xyz:3001';
+const serverUrl = config.serverUrl;
+const nodeUrl = config.nodeUrl;
 
 /**
  *
