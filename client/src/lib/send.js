@@ -43,7 +43,7 @@ export default (privateKey, metadataKey, metadataValue) => {
         .pipe(
             mergeMap((metadata) => {
                 const currentValueBytes = Convert.utf8ToUint8(metadata.metadataEntry.value);
-                console.log(currentValueBytes);
+                // console.log(currentValueBytes);
                 return of(AccountMetadataTransaction.create(
                     Deadline.create(),
                     account.publicKey,
