@@ -20,10 +20,7 @@ exports.handler = (event, context, done) => {
                     callback(true);
                 }
             }
-        ], (err, result) => {
-            console.log(err, result);
-            done(err, result);
-        });
+        ], done);
     } catch (e) {
         console.error(e);
         done(e);
