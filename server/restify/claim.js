@@ -3,13 +3,12 @@ const Claim = require('../ClaimClass');
 
 module.exports = (data) => (req, res, next) => {
     try {
-        const resBody = {}, signedTransaction = {};
+        const signedTransaction = {};
         async.waterfall([
             (callback) => {
                 new Claim(req.body)
                     .createRelayAggregateTransaction()
-                    .save(signedTransaction)
-                    .hash(resBody);
+                    .save(signedTransaction);
                 callback();
             },
             (callback) => {
@@ -17,7 +16,7 @@ module.exports = (data) => (req, res, next) => {
                     .save(signedTransaction, callback);
             },
             (callback) => {
-                res.send(resBody);
+                res.send(signedTransaction);
                 next();
                 callback();
             }
