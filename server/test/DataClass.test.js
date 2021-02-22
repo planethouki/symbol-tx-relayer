@@ -1,3 +1,4 @@
+const expect = require('chai').expect;
 require('dotenv').config();
 const {
     Account,
@@ -13,15 +14,16 @@ const {
     TransactionType,
     TransferTransaction,
     UInt64
-} = require('nem2-sdk');
+} = require('symbol-sdk');
 const async = require('async');
 const Data = require('../DataClass');
 
 const networkType = NetworkType.TEST_NET;
+const epochAdjustment = 123456789;
 
 let signature, publicKey, hash, signedTransaction, cosignatureSignedTransaction;
 
-beforeAll(() => {
+before(() => {
     const serverAccount = Account.createFromPrivateKey(
         process.env.PRIVATE_KEY,
         networkType
@@ -31,21 +33,21 @@ beforeAll(() => {
         networkType
     );
     const transferTransaction = TransferTransaction.create(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         Account.generateNewAccount(networkType).address,
         [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(1))],
         PlainMessage.create(''),
         networkType
     );
     const dummyTransaction = TransferTransaction.create(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         Account.generateNewAccount(networkType).address,
         [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(0))],
         PlainMessage.create(''),
         networkType
     );
     const aggregateTransaction = AggregateTransaction.createComplete(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         [
             transferTransaction.toAggregate(userAccount.publicAccount),
             dummyTransaction.toAggregate(serverAccount.publicAccount)
@@ -69,7 +71,7 @@ beforeAll(() => {
     hash = cosignatureSignedTransaction.parentHash;
 });
 
-test('instance', (done) => {
+it('instance', (done) => {
     let data;
     async.waterfall([
         (callback) => {
@@ -77,7 +79,7 @@ test('instance', (done) => {
             data.initialize(callback);
         },
         (callback) => {
-            expect(data).toBeInstanceOf(Data);
+            expect(data).to.be.an.instanceOf(Data);
             callback();
         },
         (callback) => {
@@ -86,7 +88,7 @@ test('instance', (done) => {
     ], done);
 });
 
-test('save & load', (done) => {
+it('save & load', (done) => {
     let data;
     async.waterfall([
         (callback) => {
@@ -100,12 +102,12 @@ test('save & load', (done) => {
             data.load(hash, callback);
         },
         (signedTransaction, callback) => {
-            expect(signedTransaction).toBeInstanceOf(SignedTransaction);
-            expect(signedTransaction).toHaveProperty('hash', expect.any(String));
-            expect(signedTransaction).toHaveProperty('payload', expect.any(String));
-            expect(signedTransaction).toHaveProperty('type', expect.any(Number));
-            expect(signedTransaction).toHaveProperty('networkType', expect.any(Number));
-            expect(signedTransaction).toHaveProperty('signerPublicKey', expect.any(String));
+            expect(signedTransaction).to.be.an.instanceOf(SignedTransaction);
+            expect(signedTransaction).to.have.property('hash').that.is.a('string');
+            expect(signedTransaction).to.have.property('payload').that.is.a('string');
+            expect(signedTransaction).to.have.property('type').that.is.a('number');
+            expect(signedTransaction).to.have.property('networkType').that.is.a('number');
+            expect(signedTransaction).to.have.property('signerPublicKey').that.is.a('string');
             callback();
         },
         (callback) => {
@@ -115,7 +117,7 @@ test('save & load', (done) => {
 });
 
 
-test('load', (done) => {
+it('load', (done) => {
     let data;
     async.waterfall([
         (callback) => {
@@ -126,7 +128,7 @@ test('load', (done) => {
             data.save(signedTransaction, callback)
         }),
         (result, callback) => {
-            expect(result).toMatchObject({});
+            expect(result).to.deep.equal({});
             callback();
         },
         (callback) => {
@@ -136,7 +138,7 @@ test('load', (done) => {
 });
 
 
-test('save', (done) => {
+it('save', (done) => {
     let data;
     async.waterfall([
         (callback) => {
@@ -147,7 +149,7 @@ test('save', (done) => {
             data.load(hash, callback);
         }),
         (signedTransaction, callback) => {
-            expect(signedTransaction).not.toBeInstanceOf(SignedTransaction);
+            expect(signedTransaction).not.to.be.instanceof(SignedTransaction);
             callback();
         },
         (callback) => {

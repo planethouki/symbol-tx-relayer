@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const { SignedTransaction } = require('nem2-sdk');
+const { SignedTransaction } = require('symbol-sdk');
 
 module.exports = class Data {
 

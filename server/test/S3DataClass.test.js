@@ -1,3 +1,4 @@
+const expect = require('chai').expect;
 require('dotenv').config();
 const {
     Account,
@@ -13,15 +14,16 @@ const {
     TransactionType,
     TransferTransaction,
     UInt64
-} = require('nem2-sdk');
+} = require('symbol-sdk');
 const async = require('async');
 const Data = require('../S3DataClass');
 
 const networkType = NetworkType.TEST_NET;
+const epochAdjustment = 123456789;
 
 let signature, publicKey, hash, signedTransaction, cosignatureSignedTransaction;
 
-beforeAll(() => {
+before(() => {
     const serverAccount = Account.createFromPrivateKey(
         process.env.PRIVATE_KEY,
         networkType
@@ -31,21 +33,21 @@ beforeAll(() => {
         networkType
     );
     const transferTransaction = TransferTransaction.create(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         Account.generateNewAccount(networkType).address,
         [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(1))],
         PlainMessage.create(''),
         networkType
     );
     const dummyTransaction = TransferTransaction.create(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         Account.generateNewAccount(networkType).address,
         [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(0))],
         PlainMessage.create(''),
         networkType
     );
     const aggregateTransaction = AggregateTransaction.createComplete(
-        Deadline.create(),
+        Deadline.create(epochAdjustment),
         [
             transferTransaction.toAggregate(userAccount.publicAccount),
             dummyTransaction.toAggregate(serverAccount.publicAccount)
@@ -69,7 +71,7 @@ beforeAll(() => {
     hash = cosignatureSignedTransaction.parentHash;
 });
 
-test('instance', (done) => {
+it('instance', (done) => {
     let data;
     async.waterfall([
         (callback) => {
@@ -77,7 +79,7 @@ test('instance', (done) => {
             data.initialize(callback);
         },
         (callback) => {
-            expect(data).toBeInstanceOf(Data);
+            expect(data).to.be.an.instanceOf(Data);
             callback();
         }
     ], done);

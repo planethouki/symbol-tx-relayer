@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const async = require('async');
-const { SignedTransaction } = require('nem2-sdk');
+const { SignedTransaction } = require('symbol-sdk');
 
 module.exports = class Data {
 

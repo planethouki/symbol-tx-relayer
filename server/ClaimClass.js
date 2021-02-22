@@ -10,7 +10,7 @@ const {
     TransactionMapping,
     TransferTransaction,
     UInt64
-} = require('nem2-sdk');
+} = require('symbol-sdk');
 
 module.exports = class Claim {
 

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node-dev index.js",
-    "test": "jest"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.13",
-    "jest": "^26.6.3",
-    "node-dev": "^6.2.0"
+    "chai": "^4.3.0",
+    "mocha": "^8.3.0",
+    "node-dev": "^6.2.0",
+    "utf8": "^3.0.0"
   }
 }

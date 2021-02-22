@@ -9,7 +9,7 @@ const {
     TransactionType,
     TransferTransaction,
     UInt64
-} = require('nem2-sdk');
+} = require('symbol-sdk');
 const claimRoute = require('../../lambda/claim');
 
 const networkType = NetworkType.TEST_NET;
