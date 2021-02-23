@@ -12,6 +12,8 @@ const {
     UInt64
 } = require('symbol-sdk');
 
+const epochAdjustment = 1573430400;
+
 module.exports = class Claim {
 
     networkType;
@@ -49,14 +51,14 @@ module.exports = class Claim {
     createRelayAggregateTransaction() {
         const signer = Account.createFromPrivateKey(process.env.PRIVATE_KEY, this.networkType);
         const dummyTransaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             Account.generateNewAccount(this.networkType).address,
             [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(0))],
             PlainMessage.create(''),
             this.networkType
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(epochAdjustment),
             [
                 this.transaction.toAggregate(this.from),
                 dummyTransaction.toAggregate(signer.publicAccount)
