@@ -1,0 +1,30 @@
+{
+  "name": "symbol-tx-relayer",
+  "version": "1.0.0",
+  "description": "My priceless Nuxt.js project",
+  "author": "planethouki",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "bootstrap": "^4.6.0",
+    "bootstrap-vue": "^2.21.2",
+    "dotenv": "^8.2.0",
+    "nuxt": "^2.15.2",
+    "rxjs": "^6.6.3",
+    "symbol-sdk": "^0.23.2",
+    "utf8": "^3.0.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^5.0.0",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.20.0",
+    "eslint-plugin-nuxt": ">=2.0.0"
+  }
+}
