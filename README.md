@@ -10,3 +10,10 @@
 サーバーがブロックチェーンに送信します。
 
 testnet(0.10.0.7)に対応しています。
+
+## ローカルで動かす
+
+1. `server`と`client`にある`.env.sample`を`.env`にリネームする
+2. `server`に`cd`して`npm dev`
+3. `client`に`cd`して`npm dev`
+4. ブラウザで`http://localhost:3000`にアクセス
