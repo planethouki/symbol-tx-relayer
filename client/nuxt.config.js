@@ -54,11 +54,17 @@ export default {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
-    }
+    },
+
+    publicPath: '/n/'
   },
 
   env: {
     SERVER_URL: process.env.SERVER_URL,
     NODE_URL: process.env.NODE_URL
+  },
+
+  router: {
+    base: process.env.NODE_ENV === 'development' ? '/' : `/${process.env.npm_package_name}/`
   }
 }
