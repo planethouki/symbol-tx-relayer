@@ -8,7 +8,7 @@ import { of } from 'rxjs'
 import { catchError } from 'rxjs/operators'
 
 const networkType = NetworkType.TEST_NET
-const nodeUrl = process.env.NODE_URL
+const nodeUrl = process.env.FETCH_NODE_URL
 
 /**
  *

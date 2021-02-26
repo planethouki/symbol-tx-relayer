@@ -227,7 +227,7 @@ export default {
       this.privateKey = Account.generateNewAccount(NetworkType.TEST_NET).privateKey
     },
     transactionStatus (hash) {
-      return `${process.env.NODE_URL}/transactionStatus/${hash}`
+      return `${process.env.LINK_NODE_URL}/transactionStatus/${hash}`
     }
   }
 }

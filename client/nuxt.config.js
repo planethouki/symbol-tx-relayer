@@ -61,7 +61,8 @@ export default {
 
   env: {
     SERVER_URL: process.env.SERVER_URL,
-    NODE_URL: process.env.NODE_URL
+    FETCH_NODE_URL: process.env.FETCH_NODE_URL,
+    LINK_NODE_URL: process.env.LINK_NODE_URL
   },
 
   router: {

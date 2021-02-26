@@ -14,7 +14,7 @@ import { catchError, mergeMap } from 'rxjs/operators'
 
 const networkType = NetworkType.TEST_NET
 const serverUrl = process.env.SERVER_URL
-const nodeUrl = process.env.NODE_URL
+const nodeUrl = process.env.FETCH_NODE_URL
 
 /**
  *

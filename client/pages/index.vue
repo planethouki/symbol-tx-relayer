@@ -9,7 +9,8 @@
 
     <section class="mt-5">
       <h4>クライアント情報</h4>
-      <div>使用ノード {{ nodeUrl }}</div>
+      <div>使用ノード {{ linkNodeUrl }}</div>
+      <div>使用ノード {{ fetchNodeUrl }}</div>
     </section>
 
     <section class="mt-5">
@@ -44,8 +45,11 @@ export default {
     }
   },
   computed: {
-    nodeUrl () {
-      return process.env.NODE_URL
+    linkNodeUrl () {
+      return process.env.LINK_NODE_URL
+    },
+    fetchNodeUrl () {
+      return process.env.FETCH_NODE_URL
     }
   },
   mounted () {
