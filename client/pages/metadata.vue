@@ -50,6 +50,7 @@
           <template v-if="metadata.isLoading">
             <b-button disabled variant="primary">
               メタデータを取得する
+              <b-spinner small type="grow"></b-spinner>
             </b-button>
           </template>
           <template v-else>
@@ -91,6 +92,7 @@
           <template v-if="sending">
             <b-button disabled variant="danger">
               メタデータを設定する
+              <b-spinner small type="grow"></b-spinner>
             </b-button>
           </template>
           <template v-else>
