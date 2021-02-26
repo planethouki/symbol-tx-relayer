@@ -29,7 +29,7 @@ testnet(0.10.0.7)に対応しています。
 5. `server`フォルダごとlambdaにデプロイする。RuntimeはNode.js 14.xとか。
 6. lambdaのHandlerを`lambda.handler`にする
 7. lambdaのTimeoutを10s程度にする
-8. api-gatewayを作成してRouteを作成する。/server/{type+}とかにする
+8. api-gatewayを作成してRouteを作成する。`/server/{type+}`とかにする
 9. api-gatewayのRouteにlambda統合する
 10. api-gatewayのCORSを有効にする
 
