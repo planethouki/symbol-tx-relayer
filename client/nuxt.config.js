@@ -67,5 +67,20 @@ export default {
 
   router: {
     base: process.env.NODE_ENV === 'development' ? '/' : `/${process.env.npm_package_name}/`
+  },
+
+  'google-gtag': {
+    id: process.env.GTAG,
+    config: {
+      anonymize_ip: true, // anonymize IP
+      send_page_view: false, // might be necessary to avoid duplicated page track on page reload
+      linker: {
+        domains: [
+          process.env.GTAG_DOMAIN
+        ]
+      }
+    },
+    debug: false, // enable to track in dev mode
+    disableAutoPageTrack: false // disable if you don't want to track each page route with router.afterEach(...).
   }
 }
