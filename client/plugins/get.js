@@ -27,13 +27,14 @@ const func = (privateKey) => {
     .toPromise()
     .then((metadata) => {
       return metadata
+        .data
         .map((entry) => {
           const metadataEntry = entry.metadataEntry
           return {
-            key: metadataEntry.scopedMetadataKey.toHex().toUpperCase(),
-            value: metadataEntry.value,
-            senderPublicKey: metadataEntry.senderPublicKey,
-            targetPublicKey: metadataEntry.targetPublicKey
+            metadataKey: metadataEntry.scopedMetadataKey.toHex().toUpperCase(),
+            metadataValue: metadataEntry.value,
+            sourceAddress: metadataEntry.sourceAddress.address,
+            targetAddress: metadataEntry.targetAddress.address
           }
         })
     })

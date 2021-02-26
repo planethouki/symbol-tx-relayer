@@ -4,109 +4,113 @@
     <p>あなたのアカウントにメタデータを作成します。手数料はかかりません。</p>
 
     <b-form>
-      <b-form-group label="Private Key" label-for="inputPrivateKey">
-        <b-form-input
-          id="inputPrivateKey"
-          v-model="privateKey"
-          type="text"
-          name="privateKey"
-          placeholder="Test Private Key"
-        />
-        <div class="text-right">
-          Address: {{ address }}
-        </div>
-      </b-form-group>
-      <b-form-group label="Metadata Key" label-for="inputMetadataKey">
-        <b-form-input
-          id="inputMetadataKey"
-          v-model="metadataKey"
-          type="text"
-          name="metadataKey"
-          placeholder="Metadata Key"
-        />
-        <div class="text-right">
-          Generated Key: {{ metadataKeyId }}
-        </div>
-      </b-form-group>
-      <b-form-group label="Metadata Value" label-for="inputMetadataValue">
-        <b-form-input
-          id="inputMetadataValue"
-          v-model="metadataValue"
-          type="text"
-          name="metadataValue"
-          placeholder="Metadata Value"
-        />
-        <div class="text-right">
-          Hex Value: {{ metadataValueHex }}
-        </div>
-      </b-form-group>
-      <b-form-group>
-        <template v-if="sending">
-          <b-button disabled variant="primary">
-            メタデータを取得する
-          </b-button>
+      <section>
+        <b-form-group label="Private Key" label-for="inputPrivateKey">
+          <b-form-input
+            id="inputPrivateKey"
+            v-model="privateKey"
+            type="text"
+            name="privateKey"
+            placeholder="Test Private Key"
+          />
+          <div class="text-right">
+            Address: {{ address }}
+          </div>
+        </b-form-group>
+        <b-form-group>
+          <template v-if="privateKey">
+            <b-button disabled variant="light">
+              秘密鍵を生成する
+            </b-button>
+          </template>
+          <template v-else>
+            <b-button variant="light" @click="handleGenerate">
+              秘密鍵を生成する
+            </b-button>
+          </template>
+        </b-form-group>
+      </section>
+
+      <section class="mb-3">
+        <hr />
+        <h4>メタデータ取得</h4>
+        <template v-if="metadata.getCount === 0">
+          <p>未取得</p>
+        </template>
+        <template v-else-if="metadata.isLoading">
+          <p>取得中・・・</p>
+        </template>
+        <template v-else-if="metadata.data.length === 0">
+          <p>メタデータはありません</p>
         </template>
         <template v-else>
-          <b-button variant="primary" @click="handleGet">
-            メタデータを取得する
-          </b-button>
+          <b-table :items="metadata.data" :fields="metadataFields" small/>
         </template>
-      </b-form-group>
-      <b-form-group>
-        <template v-if="sending">
-          <b-button disabled variant="danger">
-            メタデータを設定する
-          </b-button>
-        </template>
-        <template v-else>
-          <b-button variant="danger" @click="handleSend">
-            メタデータを設定する
-          </b-button>
-        </template>
-      </b-form-group>
+        <b-form-group>
+          <template v-if="sending">
+            <b-button disabled variant="primary">
+              メタデータを取得する
+            </b-button>
+          </template>
+          <template v-else>
+            <b-button variant="primary" @click="handleGet">
+              メタデータを取得する
+            </b-button>
+          </template>
+        </b-form-group>
+      </section>
+
+      <section>
+        <hr />
+        <h4>メタデータ設定</h4>
+        <b-form-group label="Metadata Key" label-for="inputMetadataKey">
+          <b-form-input
+            id="inputMetadataKey"
+            v-model="metadataKey"
+            type="text"
+            name="metadataKey"
+            placeholder="Metadata Key"
+          />
+          <div class="text-right">
+            Generated Scoped Key: {{ metadataKeyId }}
+          </div>
+        </b-form-group>
+        <b-form-group label="Metadata Value" label-for="inputMetadataValue">
+          <b-form-input
+            id="inputMetadataValue"
+            v-model="metadataValue"
+            type="text"
+            name="metadataValue"
+            placeholder="Metadata Value"
+          />
+          <div class="text-right">
+            Hex Value: {{ metadataValueHex }}
+          </div>
+        </b-form-group>
+        <b-form-group>
+          <template v-if="sending">
+            <b-button disabled variant="danger">
+              メタデータを設定する
+            </b-button>
+          </template>
+          <template v-else>
+            <b-button variant="danger" @click="handleSend">
+              メタデータを設定する
+            </b-button>
+          </template>
+        </b-form-group>
+      </section>
     </b-form>
 
     <section class="mb-3">
-      <h4>メタデータ</h4>
-      <template v-if="metadata.length === 0">
-        <p>未取得もしくは未設定</p>
-      </template>
-      <template v-else>
-        <b-table responsive="true" size="sm">
-          <thead>
-            <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th>Sender Public Key</th>
-              <th>Target Public Key</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="m in metadata" :key="m.key">
-              <th scope="row">
-                {{ m.key }}}
-              </th>
-              <td>{{ m.value }}}</td>
-              <td class="public-key-ellipsis">
-                {{ m.senderPublicKey }}}
-              </td>
-              <td class="public-key-ellipsis">
-                {{ m.targetPublicKey }}}
-              </td>
-            </tr>
-          </tbody>
-        </b-table>
-      </template>
-    </section>
-
-    <section class="mb-3">
+      <hr />
       <h4>送信済みトランザクション</h4>
       <ul>
         <li v-for="hash in hashes" :key="hash">
           <a
             :href="transactionStatus(hash)"
             target="_blank"
-          >{{ hash }}}</a>
+          >{{ hash }}</a>
         </li>
         <li v-if="hashes.length === 0">
           なし
@@ -119,26 +123,34 @@
 <script>
 import { Account, Convert, KeyGenerator, NetworkType } from 'symbol-sdk'
 
+const metadataFields = [
+  { metadataKey: 'Scoped Key' },
+  { metadataValue: 'Value' },
+  { sourceAddress: 'Source Address' },
+  { targetAddress: 'Target Address' }
+]
+
 export default {
   components: {
   },
   data () {
     return {
-      metadata: [],
+      metadata: { isLoading: false, getCount: 0, data: [] },
       hashes: [],
       announces: [],
       privateKey: '',
       metadataKey: '',
       metadataValue: '',
       sending: false,
-      getting: false
+      getting: false,
+      metadataFields
     }
   },
   computed: {
     address () {
       try {
         const account = Account.createFromPrivateKey(this.privateKey, NetworkType.TEST_NET)
-        return account.address.pretty()
+        return account.address.plain()
       } catch (e) {
         return ''
       }
@@ -156,34 +168,63 @@ export default {
   },
   methods: {
     handleGet () {
-      this.metadata = []
       try {
+        this.metadata.isLoading = true
+        if (!this.privateKey) {
+          throw new Error('private key required')
+        }
+        this.metadata.getCount++
         this.getting = this.$get(this.privateKey)
           .then((data) => {
-            this.metadata = data
+            this.metadata.data = data
           })
       } catch (e) {
         this.$bvToast.toast(e.message, {
           title: 'Error',
+          variant: 'danger',
           autoHideDelay: 5000,
           appendToast: true
         })
+      } finally {
+        this.metadata.isLoading = false
       }
     },
     handleSend () {
       try {
-        this.sending = this.$send(this.privateKey, this.metadataKey, this.metadataValue)
+        this.sending = true
+        if (!this.privateKey) {
+          throw new Error('private key required')
+        }
+        if (!this.metadataKey) {
+          throw new Error('metadata key required')
+        }
+        if (!this.metadataValue) {
+          throw new Error('metadata value required')
+        }
+        this.$send(this.privateKey, this.metadataKey, this.metadataValue)
           .then(({ transactionHash, announceResponse }) => {
             this.hashes = [...this.hashes, transactionHash]
             this.announces = [...this.announces, announceResponse]
+            this.$bvToast.toast(transactionHash, {
+              title: 'Success',
+              variant: 'success',
+              autoHideDelay: 5000,
+              appendToast: true
+            })
           })
       } catch (e) {
         this.$bvToast.toast(e.message, {
           title: 'Error',
+          variant: 'danger',
           autoHideDelay: 5000,
           appendToast: true
         })
+      } finally {
+        this.sending = false
       }
+    },
+    handleGenerate () {
+      this.privateKey = Account.generateNewAccount(NetworkType.TEST_NET).privateKey
     },
     transactionStatus (hash) {
       return `${process.env.NODE_URL}/transactionStatus/${hash}`
@@ -199,5 +240,10 @@ export default {
   max-width: 5rem;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+hr {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
 }
 </style>

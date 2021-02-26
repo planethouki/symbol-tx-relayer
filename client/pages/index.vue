@@ -6,13 +6,20 @@
 
       <b-button to="/metadata" variant="primary">Get started</b-button>
     </section>
+
+    <section class="mt-5">
+      <div>使用ノード {{ nodeUrl }}</div>
+    </section>
   </div>
 </template>
 
 <script>
 
 export default {
-  components: {
+  computed: {
+    nodeUrl () {
+      return process.env.NODE_URL
+    }
   }
 }
 </script>
