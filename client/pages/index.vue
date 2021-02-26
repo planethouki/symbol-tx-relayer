@@ -49,10 +49,12 @@ export default {
     }
   },
   mounted () {
-    fetch(`${process.env.SERVER_URL}/info`)
+    fetch(`${process.env.SERVER_URL}/info`, {
+      mode: 'cors',
+      cache: 'no-cache'
+    })
       .then(r => r.json())
       .then((info) => {
-        console.log(info)
         this.info = info
       })
   }

@@ -42,7 +42,6 @@ const func = async (privateKey, metadataKey, metadataValue) => {
     })
     .pipe(
       mergeMap((page) => {
-        console.log(page)
         if (page.data.length === 0) { throw new Error('no metadata') }
         const metadata = page.data[0]
         const currentValueBytes = Convert.utf8ToUint8(metadata.metadataEntry.value)
@@ -75,7 +74,7 @@ const func = async (privateKey, metadataKey, metadataValue) => {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-          'Content-Type': 'application/json; charset=utf-8'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           publicKey: account.publicKey,
@@ -100,7 +99,7 @@ const func = async (privateKey, metadataKey, metadataValue) => {
         mode: 'cors',
         cache: 'no-cache',
         headers: {
-          'Content-Type': 'application/json; charset=utf-8'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
       })
