@@ -19,6 +19,14 @@
       <div>ジェネレーションハッシュ {{ info.generationHash }}</div>
       <div>手数料モザイクID {{ info.mosaicId }}</div>
     </section>
+
+    <section class="mt-5">
+      <a
+        target="_blank"
+        href="https://github.com/planethouki/symbol-tx-relayer">
+        GitHub
+      </a>
+    </section>
   </div>
 </template>
 
