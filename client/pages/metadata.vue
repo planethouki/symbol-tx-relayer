@@ -47,7 +47,7 @@
           <b-table :items="metadata.data" :fields="metadataFields" small/>
         </template>
         <b-form-group>
-          <template v-if="sending">
+          <template v-if="metadata.isLoading">
             <b-button disabled variant="primary">
               メタデータを取得する
             </b-button>
@@ -142,7 +142,6 @@ export default {
       metadataKey: '',
       metadataValue: '',
       sending: false,
-      getting: false,
       metadataFields
     }
   },
@@ -167,14 +166,14 @@ export default {
     }
   },
   methods: {
-    handleGet () {
+    async handleGet () {
       try {
         this.metadata.isLoading = true
         if (!this.privateKey) {
           throw new Error('private key required')
         }
         this.metadata.getCount++
-        this.getting = this.$get(this.privateKey)
+        await this.$get(this.privateKey)
           .then((data) => {
             this.metadata.data = data
           })
@@ -189,7 +188,7 @@ export default {
         this.metadata.isLoading = false
       }
     },
-    handleSend () {
+    async handleSend () {
       try {
         this.sending = true
         if (!this.privateKey) {
@@ -201,7 +200,7 @@ export default {
         if (!this.metadataValue) {
           throw new Error('metadata value required')
         }
-        this.$send(this.privateKey, this.metadataKey, this.metadataValue)
+        await this.$send(this.privateKey, this.metadataKey, this.metadataValue)
           .then(({ transactionHash, announceResponse }) => {
             this.hashes = [...this.hashes, transactionHash]
             this.announces = [...this.announces, announceResponse]
