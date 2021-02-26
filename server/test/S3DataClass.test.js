@@ -75,7 +75,7 @@ it('instance', (done) => {
     let data;
     async.waterfall([
         (callback) => {
-            data = new Data('hoge');
+            data = new Data('hoge', 'fuga');
             data.initialize(callback);
         },
         (callback) => {

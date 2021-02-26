@@ -8,13 +8,13 @@ exports.handler = (event, context, done) => {
         let data;
         async.waterfall([
             (callback) => {
-                data = new Data(process.env.BUCKET_NAME);
+                data = new Data(process.env.S3_BUCKET_NAME, process.env.S3_KEY_PREFIX);
                 data.initialize(callback);
             },
             (callback) => {
-                if (event.path.includes('claim')) {
+                if (event.rawPath.includes('claim')) {
                     claimRoute(data)({body: JSON.parse(event.body)}, callback)
-                } else if (event.path.includes('sign')) {
+                } else if (event.rawPath.includes('sign')) {
                     signRoute(data)({body: JSON.parse(event.body)}, callback)
                 } else {
                     callback(true);
