@@ -18,6 +18,15 @@ server.use(restify.plugins.bodyParser());
 server.pre(cors.preflight);
 server.use(cors.actual);
 
+server.get('/info', (req, res, next) => {
+    res.json({
+        mosaicId: process.env.MOSAIC_ID,
+        restUrl: process.env.REST_URL,
+        generationHash: process.env.GENERATION_HASH,
+        signAddress: process.env.SIGN_ADDRESS
+    });
+});
+
 async.waterfall([
     (callback) => {
         data = new Data(':memory:');

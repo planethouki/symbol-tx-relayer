@@ -8,7 +8,16 @@
     </section>
 
     <section class="mt-5">
+      <h4>クライアント情報</h4>
       <div>使用ノード {{ nodeUrl }}</div>
+    </section>
+
+    <section class="mt-5">
+      <h4>サーバー情報</h4>
+      <div>使用ノード {{ info.restUrl }}</div>
+      <div>代理署名アドレス {{ info.signAddress }}</div>
+      <div>ジェネレーションハッシュ {{ info.generationHash }}</div>
+      <div>手数料モザイクID {{ info.mosaicId }}</div>
     </section>
   </div>
 </template>
@@ -16,10 +25,28 @@
 <script>
 
 export default {
+  data () {
+    return {
+      info: {
+        mosaicId: 'fetching...',
+        restUrl: 'fetching...',
+        generationHash: 'fetching...',
+        signAddress: 'fetching...'
+      }
+    }
+  },
   computed: {
     nodeUrl () {
       return process.env.NODE_URL
     }
+  },
+  mounted () {
+    fetch(`${process.env.SERVER_URL}/info`)
+      .then(r => r.json())
+      .then((info) => {
+        console.log(info)
+        this.info = info
+      })
   }
 }
 </script>
