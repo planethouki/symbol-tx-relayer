@@ -12,9 +12,11 @@ const {
 } = symbolSdk;
 const Claim = require('../ClaimClass');
 
-const networkType = NetworkType.TEST_NET;
-const epochAdjustment = 123456789;
-const mosaicId = "091F837E059AE13C";
+const {
+    networkType,
+    epochAdjustment,
+    mosaicId
+} = require('./testEnv');
 
 describe('ClaimClass', () => {
 
