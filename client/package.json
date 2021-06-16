@@ -19,10 +19,10 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "nuxt": "^2.15.2",
-    "rxjs": "^6.6.3",
-    "symbol-sdk": "^0.23.2",
+    "rxjs": "^7.1.0",
+    "symbol-sdk": "^1.0.1",
     "utf8": "^3.0.0"
   },
   "devDependencies": {
@@ -31,6 +31,6 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.20.0",
     "eslint-plugin-nuxt": ">=2.0.0",
-    "gh-pages": "^3.1.0"
+    "gh-pages": "^3.2.1"
   }
 }
