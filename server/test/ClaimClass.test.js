@@ -1,5 +1,4 @@
 const expect = require('chai').expect;
-require('dotenv').config();
 const symbolSdk = require('symbol-sdk');
 const {
     Account,
