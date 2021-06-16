@@ -43,3 +43,8 @@ testnet(0.10.0.7)に対応しています。
 4. `dist`フォルダをどこかでホストする
 
 `https`でホストした場合は、`FETCH_NODE_URL`は`https`でなければならない
+
+## todo
+
+- [ ] 1.0.x.0 testnet compatible
+- [ ] node info display 
