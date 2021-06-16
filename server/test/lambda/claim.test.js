@@ -1,17 +1,4 @@
-const {
-    Account,
-    Deadline,
-    Mosaic,
-    MosaicId,
-    NetworkType,
-    PlainMessage,
-    TransactionType,
-    TransferTransaction,
-    UInt64
-} = require('symbol-sdk');
 const claimRoute = require('../../lambda/claim');
-
-const networkType = NetworkType.TEST_NET;
 
 const data = {
     save(signedTransaction, callback) {
