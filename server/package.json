@@ -21,20 +21,20 @@
   "homepage": "https://github.com/planethouki/symbol-tx-relayer#readme",
   "dependencies": {
     "async": "^3.2.0",
-    "aws-sdk": "^2.848.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "restify": "^8.5.1",
     "restify-cors-middleware": "^1.1.1",
     "restify-errors": "^8.0.2",
     "sqlite3": "^5.0.2",
-    "symbol-sdk": "^0.23.2",
+    "symbol-sdk": "^1.0.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.12.13",
-    "chai": "^4.3.0",
-    "mocha": "^8.3.0",
-    "node-dev": "^6.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "aws-sdk": "^2.929.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.0",
+    "node-dev": "^7.0.0",
     "utf8": "^3.0.0"
   }
 }
