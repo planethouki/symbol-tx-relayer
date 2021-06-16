@@ -15,6 +15,7 @@ const Claim = require('../ClaimClass');
 
 const networkType = NetworkType.TEST_NET;
 const epochAdjustment = 123456789;
+const mosaicId = "091F837E059AE13C";
 
 describe('ClaimClass', () => {
 
@@ -23,7 +24,7 @@ describe('ClaimClass', () => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             Account.generateNewAccount(networkType).address,
-            [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(1))],
+            [new Mosaic(new MosaicId(mosaicId), UInt64.fromUint(1))],
             PlainMessage.create(''),
             networkType
         );
