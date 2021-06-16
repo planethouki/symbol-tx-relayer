@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "My priceless Nuxt.js project",
   "author": "planethouki",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "nuxt",
