@@ -1,19 +1,5 @@
 const expect = require('chai').expect;
-const {
-    Account,
-    AggregateTransaction,
-    CosignatureTransaction,
-    Deadline,
-    Mosaic,
-    MosaicId,
-    NetworkType,
-    PlainMessage,
-    SignedTransaction,
-    TransactionAnnounceResponse,
-    TransactionType,
-    TransferTransaction,
-    UInt64
-} = require('symbol-sdk');
+const { SignedTransaction } = require('symbol-sdk');
 const Sign = require('../SignClass');
 
 const {
@@ -21,68 +7,41 @@ const {
     epochAdjustment,
     mosaicId,
     privateKey,
-    generationHash
+    generationHash,
+    restUrl,
+    signature,
+    publicKey,
+    parentHash,
+    signedTransaction,
+    cosignatureSignedTransaction
 } = require('./testEnv');
 
-let signature, publicKey, parentHash, signedTransaction, cosignatureSignedTransaction;
-
 describe('SignClass', () => {
-
-    before(() => {
-        const serverAccount = Account.createFromPrivateKey(
-            privateKey,
-            networkType
-        );
-        const userAccount = Account.createFromPrivateKey(
-            'C604F0AE90295D7311F9F78EBDC2D91D22861CC843E58266221DB06F784D1FCB',
-            networkType
-        );
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
-            Account.generateNewAccount(networkType).address,
-            [new Mosaic(new MosaicId(mosaicId), UInt64.fromUint(1))],
-            PlainMessage.create(''),
-            networkType
-        );
-        const dummyTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
-            Account.generateNewAccount(networkType).address,
-            [new Mosaic(new MosaicId(mosaicId), UInt64.fromUint(0))],
-            PlainMessage.create(''),
-            networkType
-        );
-        const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(epochAdjustment),
-            [
-                transferTransaction.toAggregate(userAccount.publicAccount),
-                dummyTransaction.toAggregate(serverAccount.publicAccount)
-            ],
-            networkType,
-            [],
-            UInt64.fromUint(50000)
-        );
-        signedTransaction = serverAccount.signTransactionWithCosignatories(
-            aggregateTransaction,
-            [],
-            generationHash
-        );
-        cosignatureSignedTransaction = CosignatureTransaction.signTransactionPayload(
-            userAccount,
-            signedTransaction.payload,
-            generationHash
-        );
-        signature = cosignatureSignedTransaction.signature;
-        publicKey = cosignatureSignedTransaction.signerPublicKey;
-        parentHash = cosignatureSignedTransaction.parentHash;
-    });
 
     it('instance', () => {
         const sign = new Sign({
             signature,
             publicKey,
             parentHash
-        });
+        }, privateKey, generationHash);
         expect(sign).to.be.an.instanceOf(Sign);
+    });
+
+    it('validate', () => {
+        expect(() => {
+            new Sign({
+                signature,
+                publicKey,
+                parentHash
+            });
+        }).to.throw();
+        expect(() => {
+            new Sign({
+                signature,
+                publicKey,
+                parentHash
+            }, privateKey);
+        }).to.throw();
     });
 
     it('cosignature', async () => {
@@ -90,7 +49,7 @@ describe('SignClass', () => {
             signature,
             publicKey,
             parentHash
-        });
+        }, privateKey, generationHash);
         sign
             .addSignedTransaction(signedTransaction)
             .concatCosignature();
@@ -102,27 +61,8 @@ describe('SignClass', () => {
             signature,
             publicKey,
             parentHash
-        });
+        }, privateKey, generationHash);
         expect(sign.parentHash).to.equal(parentHash);
-    });
-
-
-    it('send', async () => {
-        const sign = new Sign({
-            signature,
-            publicKey,
-            parentHash
-        });
-        sign
-            .addSignedTransaction(signedTransaction)
-            .concatCosignature();
-        await Sign
-            .send(sign.cosignedTransaction)
-            .toPromise()
-            .then((res) => {
-                console.log(res);
-                expect(res).to.be.an.instanceOf(TransactionAnnounceResponse)
-            });
     });
 
 });

@@ -26,17 +26,31 @@ module.exports = class Sign {
     from;
     signedTransaction;
     cosignedTransaction;
+    generationHash;
+    privateKey;
 
-    constructor(requestBodyObject) {
+    /**
+     *
+     * @param requestBodyObject
+     * @param privateKey
+     * @param generationHash
+     */
+    constructor(requestBodyObject, privateKey, generationHash) {
         this.requestBodyObject = requestBodyObject;
 
         // validate
-        const isValid = this.requestBodyObject.hasOwnProperty('signature')
-            && this.requestBodyObject.hasOwnProperty('publicKey')
-            && this.requestBodyObject.hasOwnProperty('parentHash');
+        let isValid = this.requestBodyObject.hasOwnProperty('signature');
+        isValid = isValid && this.requestBodyObject.hasOwnProperty('publicKey');
+        isValid = isValid && this.requestBodyObject.hasOwnProperty('parentHash');
+        isValid = isValid && privateKey !== undefined;
+        isValid = isValid && generationHash !== undefined;
+
         if (!isValid) {
             throw new Error();
         }
+
+        this.generationHash = generationHash;
+        this.privateKey = privateKey;
 
         // mapping
         this.signature = this.requestBodyObject.signature;
@@ -58,7 +72,7 @@ module.exports = class Sign {
 
     concatCosignature() {
         const transaction = TransactionMapping.createFromPayload(this.signedTransaction.payload);
-        const signer = Account.createFromPrivateKey(process.env.PRIVATE_KEY, this.networkType);
+        const signer = Account.createFromPrivateKey(this.privateKey, this.networkType);
         this.cosignedTransaction = signer.signTransactionGivenSignatures(
             transaction,
             [
@@ -68,20 +82,9 @@ module.exports = class Sign {
                     this.from.publicKey
                 )
             ],
-            process.env.GENERATION_HASH
+            this.generationHash
         );
         return this;
     }
-
-    /**
-     *
-     * @param signedTransaction
-     * @return {Observable<TransactionAnnounceResponse>}
-     */
-    static send(signedTransaction) {
-        const transactionHttp = new TransactionHttp(process.env.REST_URL);
-        return transactionHttp.announce(signedTransaction);
-    }
-
 
 }
