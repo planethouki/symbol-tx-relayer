@@ -15,13 +15,17 @@ const Claim = require('../ClaimClass');
 const {
     networkType,
     epochAdjustment,
-    mosaicId
+    mosaicId,
+    privateKey,
+    generationHash
 } = require('./testEnv');
 
 describe('ClaimClass', () => {
 
-    it('transaction', () => {
-        const userAccount = Account.generateNewAccount(networkType);
+    let transaction;
+    let publicKey;
+
+    before(() => {
         const transferTransaction = TransferTransaction.create(
             Deadline.create(epochAdjustment),
             Account.generateNewAccount(networkType).address,
@@ -29,12 +33,52 @@ describe('ClaimClass', () => {
             PlainMessage.create(''),
             networkType
         );
-        const jsonObject = transferTransaction.toJSON();
-        const claim = new Claim({
-            transaction: jsonObject,
-            publicKey: userAccount.publicKey
+        transaction = transferTransaction.toJSON();
+        const userAccount = Account.generateNewAccount(networkType);
+        publicKey = userAccount.publicKey;
+    });
+
+    describe('constructor', () => {
+        it('valid', () => {
+            const claim = new Claim({
+                transaction,
+                publicKey
+            }, privateKey, generationHash, epochAdjustment, mosaicId, networkType);
+            expect(claim).to.be.an.instanceOf(Claim);
+        })
+        it('invalid1', () => {
+            expect(() => {
+                const claim = new Claim({
+                    transaction
+                }, privateKey, generationHash, epochAdjustment, mosaicId);
+            }).to.throw();
         });
-        expect(claim).to.be.an.instanceOf(Claim);
+        it('invalid2', () => {
+            expect(() => {
+                const claim = new Claim({
+                    transaction,
+                    publicKey
+                }, privateKey, generationHash, epochAdjustment, mosaicId);
+            }).to.throw();
+        });
+    });
+
+    it('createRelayAggregateTransaction', () => {
+        const claim = new Claim({
+            transaction,
+            publicKey
+        }, privateKey, generationHash, epochAdjustment, mosaicId, networkType);
+        const result = claim.createRelayAggregateTransaction();
+        expect(result).to.be.instanceOf(Claim);
+    });
+
+    it('save', () => {
+        const claim = new Claim({
+            transaction,
+            publicKey
+        }, privateKey, generationHash, epochAdjustment, mosaicId, networkType);
+        const result = claim.createRelayAggregateTransaction().save({});
+        expect(result).to.be.instanceOf(Claim);
     });
 
 });

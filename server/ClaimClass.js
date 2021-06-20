@@ -12,8 +12,6 @@ const {
     UInt64
 } = require('symbol-sdk');
 
-const epochAdjustment = 1573430400;
-
 module.exports = class Claim {
 
     networkType;
@@ -21,14 +19,28 @@ module.exports = class Claim {
     transaction;
     from;
     signedTransaction;
+    generationHash;
+    privateKey;
+    epochAdjustment;
+    mosaicId;
 
-    constructor(requestBodyObject) {
-        this.networkType = NetworkType.TEST_NET;
+    constructor(requestBodyObject, privateKey, generationHash, epochAdjustment, mosaicId, networkType) {
+        this.privateKey = privateKey;
+        this.generationHash = generationHash;
+        this.epochAdjustment = epochAdjustment;
+        this.mosaicId = mosaicId;
+        this.networkType = networkType;
         this.requestBodyObject = requestBodyObject;
 
         // validate
-        const isValid = this.requestBodyObject.hasOwnProperty('transaction')
-            && this.requestBodyObject.hasOwnProperty('publicKey');
+        let isValid = this.requestBodyObject.hasOwnProperty('transaction');
+        isValid = isValid && this.requestBodyObject.hasOwnProperty('publicKey');
+        isValid = isValid && privateKey !== undefined;
+        isValid = isValid && generationHash !== undefined;
+        isValid = isValid && epochAdjustment !== undefined;
+        isValid = isValid && mosaicId !== undefined;
+        isValid = isValid && networkType !== undefined;
+
         if (!isValid) {
             throw new Error();
         }
@@ -49,16 +61,16 @@ module.exports = class Claim {
      * @return {Claim}
      */
     createRelayAggregateTransaction() {
-        const signer = Account.createFromPrivateKey(process.env.PRIVATE_KEY, this.networkType);
+        const signer = Account.createFromPrivateKey(this.privateKey, this.networkType);
         const dummyTransaction = TransferTransaction.create(
-            Deadline.create(epochAdjustment),
+            Deadline.create(this.epochAdjustment),
             Account.generateNewAccount(this.networkType).address,
-            [new Mosaic(new MosaicId(process.env.MOSAIC_ID), UInt64.fromUint(0))],
+            [new Mosaic(new MosaicId(this.mosaicId), UInt64.fromUint(0))],
             PlainMessage.create(''),
             this.networkType
         );
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(epochAdjustment),
+            Deadline.create(this.epochAdjustment),
             [
                 this.transaction.toAggregate(this.from),
                 dummyTransaction.toAggregate(signer.publicAccount)
@@ -70,7 +82,7 @@ module.exports = class Claim {
         this.signedTransaction = signer.signTransactionWithCosignatories(
             aggregateTransaction,
             [],
-            process.env.GENERATION_HASH
+            this.generationHash
         );
         return this;
     }
