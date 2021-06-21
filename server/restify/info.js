@@ -1,5 +1,4 @@
 const async = require('async');
-const Claim = require('../ClaimClass');
 const Network = require('../NetworkClass');
 const Info = require('../InfoClass');
 
@@ -16,12 +15,15 @@ module.exports = () => (req, res, next) => {
                 });
             },
             (callback) => {
+                console.log("hoge")
                 const info = new Info(process.env.PRIVATE_KEY, network.networkType);
                 const result = {
                     ...info.getInfo(),
                     restUrl: process.env.REST_URL
                 }
-                callback(null, result);
+                res.send(result);
+                next();
+                callback();
             }
         ]);
     } catch (e) {

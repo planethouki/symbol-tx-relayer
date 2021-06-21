@@ -1,6 +1,7 @@
 const async = require('async');
 const Sign = require('../SignClass');
 const Send = require('../SendClass');
+const Network = require('../NetworkClass');
 
 module.exports = (data) => (req, res, next) => {
     try {

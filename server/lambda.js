@@ -23,7 +23,7 @@ exports.handler = (event, context, done) => {
                 } else if (event.rawPath.includes('sign')) {
                     signRoute(data)({body: JSON.parse(event.body)}, callback)
                 } else if (event.rawPath.includes('info')) {
-                    infoRoute()({body: JSON.parse(event.body)}, callback)
+                    infoRoute()({}, callback)
                 } else {
                     callback(true);
                 }

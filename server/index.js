@@ -27,7 +27,7 @@ async.waterfall([
     (callback) => {
         server.post('/claim', claimRoute(data));
         server.post('/sign', signRoute(data));
-        server.post('/info', infoRoute());
+        server.get('/info', infoRoute());
         callback();
     },
     (callback) => {
