@@ -46,17 +46,17 @@ describe('NetworkClass', () => {
 
     it('fetch', async () => {
         const network = new Network(restUrl);
-        const result = await network.fetch();
-        expect(result).to.have.property('networkType');
-        expect(result).to.have.property('epochAdjustment');
-        expect(result).to.have.property('mosaicId');
-        expect(result).to.have.property('generationHash');
-        expect(result.networkType).to.equal(networkType);
-        expect(Number.isInteger(result.epochAdjustment)).to.be.true;
-        expect(result.epochAdjustment).to.equal(epochAdjustment);
-        expect(result.mosaicId).to.equal(mosaicId);
-        expect(result.generationHash.length).to.equal(64);
-        expect(result.generationHash).to.equal(generationHash);
+        await network.fetch();
+        expect(network).to.have.property('networkType');
+        expect(network).to.have.property('epochAdjustment');
+        expect(network).to.have.property('mosaicId');
+        expect(network).to.have.property('generationHash');
+        expect(network.networkType).to.equal(networkType);
+        expect(Number.isInteger(network.epochAdjustment)).to.be.true;
+        expect(network.epochAdjustment).to.equal(epochAdjustment);
+        expect(network.mosaicId).to.equal(mosaicId);
+        expect(network.generationHash.length).to.equal(64);
+        expect(network.generationHash).to.equal(generationHash);
     })
 
 });

@@ -16,6 +16,10 @@ const {
 module.exports = class Network {
 
     restUrl;
+    networkType;
+    epochAdjustment;
+    mosaicId;
+    generationHash;
 
     constructor(restUrl) {
         // validate
@@ -39,12 +43,10 @@ module.exports = class Network {
         return Promise
             .all(gets)
             .then(([networkType, epochAdjustment, currencies, generationHash]) => {
-                return {
-                    networkType,
-                    epochAdjustment,
-                    mosaicId: currencies.currency.mosaicId.toHex(),
-                    generationHash
-                }
+                this.networkType = networkType;
+                this.epochAdjustment = epochAdjustment;
+                this.mosaicId = currencies.currency.mosaicId.toHex();
+                this.generationHash = generationHash;
             })
     }
 

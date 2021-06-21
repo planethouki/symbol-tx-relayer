@@ -4,11 +4,19 @@ const Send = require('../SendClass');
 
 module.exports = (data) => (req, res, next) => {
     try {
-        let parentHash;
-        const sign = new Sign(req.body, process.env.PRIVATE_KEY, process.env.GENERATION_HASH);
-        const send = new Send(sign.cosignedTransaction, process.env.REST_URL);
+        let parentHash, sign, send, network;
         async.waterfall([
             (callback) => {
+                network = new Network(process.env.REST_URL)
+                network.fetch().then(() => {
+                    callback();
+                }).catch((err) => {
+                    callback(err);
+                });
+            },
+            (callback) => {
+                sign = new Sign(req.body, process.env.PRIVATE_KEY, network.generationHash);
+                send = new Send(sign.cosignedTransaction, process.env.REST_URL);
                 parentHash = sign.parentHash;
                 callback();
             },

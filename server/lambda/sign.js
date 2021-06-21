@@ -1,13 +1,22 @@
 const async = require('async');
 const Sign = require('../SignClass');
 const Send = require('../SendClass');
+const Network = require('../NetworkClass');
 
 module.exports = (data) => (req, next) => {
-    let parentHash;
-    const sign = new Sign(req.body, process.env.PRIVATE_KEY, process.env.GENERATION_HASH);
-    const send = new Send(sign.cosignedTransaction, process.env.REST_URL);
+    let parentHash, sign, send, network;
     async.waterfall([
         (callback) => {
+            network = new Network(process.env.REST_URL)
+            network.fetch().then(() => {
+                callback();
+            }).catch((err) => {
+                callback(err);
+            });
+        },
+        (callback) => {
+            sign = new Sign(req.body, process.env.PRIVATE_KEY, network.generationHash);
+            send = new Send(sign.cosignedTransaction, process.env.REST_URL);
             parentHash = sign.parentHash;
             callback();
         },
