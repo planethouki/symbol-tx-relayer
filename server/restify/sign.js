@@ -11,13 +11,10 @@ module.exports = (data) => (req, res, next) => {
                 network = new Network(process.env.REST_URL)
                 network.fetch().then(() => {
                     callback();
-                }).catch((err) => {
-                    callback(err);
                 });
             },
             (callback) => {
                 sign = new Sign(req.body, process.env.PRIVATE_KEY, network.generationHash);
-                send = new Send(sign.cosignedTransaction, process.env.REST_URL);
                 parentHash = sign.parentHash;
                 callback();
             },
@@ -32,8 +29,9 @@ module.exports = (data) => (req, res, next) => {
                 callback();
             },
             (callback) => {
+                send = new Send(sign.cosignedTransaction, process.env.REST_URL);
                 send
-                    .send(sign.cosignedTransaction)
+                    .send()
                     .subscribe((announce) => {
                         console.log(announce);
                         res.send(announce);

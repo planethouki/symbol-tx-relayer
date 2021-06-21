@@ -15,7 +15,6 @@ module.exports = () => (req, res, next) => {
                 });
             },
             (callback) => {
-                console.log("hoge")
                 const info = new Info(process.env.PRIVATE_KEY, network.networkType);
                 const result = {
                     ...info.getInfo(),

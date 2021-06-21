@@ -16,7 +16,6 @@ module.exports = (data) => (req, next) => {
         },
         (callback) => {
             sign = new Sign(req.body, process.env.PRIVATE_KEY, network.generationHash);
-            send = new Send(sign.cosignedTransaction, process.env.REST_URL);
             parentHash = sign.parentHash;
             callback();
         },
@@ -31,8 +30,9 @@ module.exports = (data) => (req, next) => {
             callback();
         },
         (callback) => {
+            send = new Send(sign.cosignedTransaction, process.env.REST_URL);
             send
-                .send(sign.cosignedTransaction)
+                .send()
                 .subscribe((announce) => {
                     callback(null, announce);
                 });

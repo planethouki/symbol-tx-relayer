@@ -33,7 +33,7 @@ module.exports = class Info {
     getInfo() {
         const account = Account.createFromPrivateKey(this.privateKey, this.networkType);
         return {
-            address: account.address.plain()
+            signAddress: account.address.plain()
         }
     }
 
