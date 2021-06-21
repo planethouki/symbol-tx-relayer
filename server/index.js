@@ -5,6 +5,7 @@ const corsMiddleware = require('restify-cors-middleware');
 
 const claimRoute = require('./restify/claim');
 const signRoute = require('./restify/sign');
+const infoRoute = require('./restify/info');
 
 const Data = require('./DataClass');
 let data;
@@ -18,15 +19,6 @@ server.use(restify.plugins.bodyParser());
 server.pre(cors.preflight);
 server.use(cors.actual);
 
-server.get('/info', (req, res, next) => {
-    res.json({
-        mosaicId: process.env.MOSAIC_ID,
-        restUrl: process.env.REST_URL,
-        generationHash: process.env.GENERATION_HASH,
-        signAddress: process.env.SIGN_ADDRESS
-    });
-});
-
 async.waterfall([
     (callback) => {
         data = new Data(':memory:');
@@ -35,6 +27,7 @@ async.waterfall([
     (callback) => {
         server.post('/claim', claimRoute(data));
         server.post('/sign', signRoute(data));
+        server.post('/info', infoRoute());
         callback();
     },
     (callback) => {
