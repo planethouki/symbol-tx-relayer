@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/planethouki/symbol-tx-relayer#readme",
   "dependencies": {
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "dotenv": "^10.0.0",
     "restify": "^8.5.1",
     "restify-cors-middleware": "^1.1.1",
