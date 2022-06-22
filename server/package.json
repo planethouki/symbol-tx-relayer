@@ -25,7 +25,7 @@
     "restify": "^8.5.1",
     "restify-cors-middleware": "^1.1.1",
     "restify-errors": "^8.0.2",
-    "sqlite3": "^5.0.2",
+    "sqlite3": "^5.0.3",
     "symbol-sdk": "^1.0.1",
     "winston": "^3.3.3"
   },
